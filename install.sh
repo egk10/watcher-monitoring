@@ -4,7 +4,7 @@
 
 set -e
 
-VERSION="3.1"
+VERSION="3.2"
 CURRENT_DIR="$(pwd)"
 ENV_FILE_SOURCE="$CURRENT_DIR/.watcher.env"
 ENV_FILE_DEST="/etc/watcher/.watcher.env"
@@ -80,6 +80,13 @@ install_scripts() {
   sudo chmod +x "$SCRIPT_PATH/watcher-"*.sh
   sudo chmod +x "$SCRIPT_PATH/update_node.sh"
   echo "✅ Scripts installed to $SCRIPT_PATH/"
+
+  # Ensure systemd always uses the latest update_node.sh
+  if [[ "$SCRIPT_PATH/update_node.sh" != "/usr/local/bin/update_node.sh" ]]; then
+    sudo cp "$CURRENT_DIR/update_node.sh" /usr/local/bin/update_node.sh
+    sudo chmod +x /usr/local/bin/update_node.sh
+    echo "✅ update_node.sh redeployed to /usr/local/bin/ for systemd"
+  fi
 }
 
 ### ⏱️ Set up systemd health check timer
