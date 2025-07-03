@@ -15,7 +15,9 @@ cd watcher-monitoring
 ```
 
 ## ⚡ Quick Install (.deb)
+}
 
+}
 ```bash
 ```
 
