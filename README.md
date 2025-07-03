@@ -15,19 +15,15 @@ cd watcher-monitoring
 ```
 
 ## ⚡ Quick Install (.deb)
-wget https://github.com/egk10/watcher-monitoring/releases/download/v1.0.13/watcher-monitoring-v1.0.13.deb && sudo dpkg -i watcher-monitoring-v1.0.13.deb}
 }
-wget https://github.com/egk10/watcher-monitoring/releases/download/v1.0.13/watcher-monitoring-v1.0.13.deb && sudo dpkg -i watcher-monitoring-v1.0.13.deb}
 }
-wget https://github.com/egk10/watcher-monitoring/releases/download/v1.0.13/watcher-monitoring-v1.0.13.deb && sudo dpkg -i watcher-monitoring-v1.0.13.deb}
 }
-wget https://github.com/egk10/watcher-monitoring/releases/download/v1.0.13/watcher-monitoring-v1.0.13.deb && sudo dpkg -i watcher-monitoring-v1.0.13.deb}
 
-wget https://github.com/egk10/watcher-monitoring/releases/download/v1.0.13/watcher-monitoring-v1.0.13.deb && sudo dpkg -i watcher-monitoring-v1.0.13.deb}
 }
 }
 ```bash
 ```
+wget https://github.com/egk10/watcher-monitoring/releases/download/v1.0.14/watcher-monitoring-v1.0.14.deb && sudo dpkg -i watcher-monitoring-v1.0.14.deb
 
 
 🔐 Environment Configuration: .watcher.env
