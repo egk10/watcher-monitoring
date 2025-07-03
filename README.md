@@ -8,11 +8,11 @@ Monitor missed attestations, send Telegram alerts, update your node, and manage 
 
 ## 🚀 Manual Install
 
-> **Before you run the install script:**
+> **Setup is interactive!**
 >
-> 1. **Create a `.watcher.env` file** in the repo root with your secrets (see below for required variables).
-> 2. If you skip this step, the installer will interactively prompt you for the required values and generate the file for you.
-> 3. **If any value contains spaces, wrap it in single quotes (e.g. 'my app password').**
+> - You can run `./install.sh` directly and it will prompt you for all required secrets if `.watcher.env` is missing.
+> - Optionally, you may pre-create a `.watcher.env` file in the repo root (see below for required variables) to skip the prompts.
+> - **If any value contains spaces, wrap it in single quotes (e.g. 'my app password').**
 
 ```bash
 git clone https://github.com/egk10/watcher-monitoring.git ~/watcher-monitoring
@@ -26,7 +26,7 @@ cd watcher-monitoring
 
 🔐 **Environment Configuration: .watcher.env**
 
-Create a file named `.watcher.env` inside the repo root **before running `./install.sh`**, or let the installer prompt you for the required values. You can also edit `/etc/watcher/.watcher.env` after install.
+You can let the installer prompt you for the required values, or pre-create a file named `.watcher.env` inside the repo root before running `./install.sh`. You can also edit `/etc/watcher/.watcher.env` after install.
 
 **Required Notification Variables:**
 ```env
@@ -90,6 +90,7 @@ v3.3 — July 3, 2025
     - Interactive .watcher.env setup if missing
     - EMAIL_TO now required and documented
     - Instructions for handling spaces in secrets
+    - No need to manually create .watcher.env (installer is interactive)
 
 v1.0 — July 2, 2025
 
