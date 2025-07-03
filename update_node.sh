@@ -14,6 +14,17 @@ else
 fi
 
 DATE=$(date -u +%F)
+if [[ ! -d "$LOG_DIR" ]]; then
+  sudo mkdir -p "$LOG_DIR"
+  sudo chown "$(whoami)":"$(whoami)" "$LOG_DIR"
+fi
+
+# Check if log directory is writable
+if [[ ! -w "$LOG_DIR" ]]; then
+  echo "❌ Log directory $LOG_DIR is not writable by $(whoami)."
+  exit 1
+fi
+
 LOG_FILE="$LOG_DIR/update_report-$DATE.txt"
 CHANGELOG_FILE="$LOG_DIR/watcher-changelog.log"
 DRYRUN=false
