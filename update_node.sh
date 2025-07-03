@@ -76,10 +76,9 @@ EOF
     -d parse_mode="HTML" \
     --data-urlencode text="$TELEGRAM_MSG"
 
-  # ========== 4. Extract update block for email ==========
-  UPDATE_BLOCK=$(awk '/Running: ethd update/,/Post-Update Component Versions/' "$LOG_FILE" | sed 's/\x1b
-
 \[[0-9;]*m//g')
+  # ========== 4. Extract update block for email ==========
+  UPDATE_BLOCK=$(awk '/Running: ethd update/,/Post-Update Component Versions/' "$LOG_FILE" | sed 's/\x1b\[[0-9;]*m//g')
   UPDATE_BLOCK_HTML=$(echo "$UPDATE_BLOCK" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g' | awk '{print "<div style=\"font-family:monospace; white-space:pre; font-size:13px;\">" $0 "</div>"}')
 
   # ========== 5. HTML Email summary ==========
