@@ -27,6 +27,15 @@ ALERT_LOG="/var/log/${HOSTNAME}-watcher/health-alerts.log"
 # --- Init ---
 init() {
   mkdir -p "$(dirname "$ALERT_LOG")"
+  # Ensure log directory is writable, fix if not
+  if [[ ! -w "$(dirname "$ALERT_LOG")" ]]; then
+    echo "⚠️  Log directory $(dirname "$ALERT_LOG") not writable by $(whoami). Attempting to fix..."
+    sudo chown $(whoami):$(whoami) "$(dirname "$ALERT_LOG")"
+    if [[ ! -w "$(dirname "$ALERT_LOG")" ]]; then
+      echo "❌ Still cannot write to log directory. Exiting."
+      exit 1
+    fi
+  fi
 
   if [[ ! -f "$ENV_FILE" ]]; then
     echo "❌ Missing env file: $ENV_FILE"

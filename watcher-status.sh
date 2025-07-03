@@ -7,6 +7,17 @@ ENV_PATH="$(dirname "$0")/.watcher.env"
 VERSION_FILE="/usr/local/share/minipool-watcher.version"
 SCHEDULE_FILE="/usr/local/share/minipool-watcher.schedule"
 LOG_DIR="/var/log/${HOSTNAME}-watcher"
+if [[ ! -d "$LOG_DIR" ]]; then
+  mkdir -p "$LOG_DIR"
+fi
+if [[ ! -w "$LOG_DIR" ]]; then
+  echo "⚠️  Log directory $LOG_DIR not writable by $(whoami). Attempting to fix..."
+  sudo chown $(whoami):$(whoami) "$LOG_DIR"
+  if [[ ! -w "$LOG_DIR" ]]; then
+    echo "❌ Still cannot write to log directory. Exiting."
+    exit 1
+  fi
+fi
 
 # --- Data Extraction ---
 VERSION=$(grep SCRIPT_VERSION "$SCRIPT_PATH" | cut -d'"' -f2 2>/dev/null || echo "N/A")

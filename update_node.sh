@@ -10,6 +10,8 @@ HOSTNAME=$(hostname)
 ETH_DOCKER_PATH="/home/egk/eth-docker"
 
 # 🔐 Smart log directory fallback if /var/log is unwritable
+
+# Log directory logic with auto-fix for permissions
 if [ -w "/var/log" ]; then
   LOG_DIR="/var/log/${HOSTNAME}-watcher"
 else
@@ -17,15 +19,14 @@ else
 fi
 
 DATE=$(date -u +%F)
-if [[ ! -d "$LOG_DIR" ]]; then
-  sudo mkdir -p "$LOG_DIR"
-  sudo chown "$(whoami)":"$(whoami)" "$LOG_DIR"
-fi
-
-# Check if log directory is writable
+mkdir -p "$LOG_DIR"
 if [[ ! -w "$LOG_DIR" ]]; then
-  echo "❌ Log directory $LOG_DIR is not writable by $(whoami)."
-  exit 1
+  echo "⚠️  Log directory $LOG_DIR not writable by $(whoami). Attempting to fix..."
+  sudo chown $(whoami):$(whoami) "$LOG_DIR"
+  if [[ ! -w "$LOG_DIR" ]]; then
+    echo "❌ Still cannot write to log directory. Exiting."
+    exit 1
+  fi
 fi
 
 LOG_FILE="$LOG_DIR/update_report-$DATE.txt"
