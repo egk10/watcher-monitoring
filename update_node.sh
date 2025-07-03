@@ -162,7 +162,10 @@ update_and_log() {
   get_component_versions_from_ethd | tee -a "$LOG_FILE"
 
   if [[ $DRYRUN == false ]]; then
-    log_message "\n📦 Running: ethd update && ethd up"
+    log_message "\n�️ Running: OS package update (apt update/upgrade)"
+    sudo apt-get update | tee -a "$LOG_FILE"
+    sudo apt-get upgrade -y | tee -a "$LOG_FILE"
+    log_message "\n�📦 Running: ethd update && ethd up"
     ETHD_BIN="$(detect_ethd_binary)"
     if [[ -n "$ETHD_BIN" ]]; then
       (cd "$(dirname "$ETHD_BIN")" && ./ethd update && ./ethd up) | tee -a "$LOG_FILE"
