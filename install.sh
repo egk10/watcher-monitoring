@@ -4,7 +4,7 @@
 
 set -e
 
-VERSION="3.0"
+VERSION="3.1"
 CURRENT_DIR="$(pwd)"
 ENV_FILE_SOURCE="$CURRENT_DIR/.watcher.env"
 ENV_FILE_DEST="/etc/watcher/.watcher.env"
@@ -76,7 +76,9 @@ install_scripts() {
   echo "📦 Deploying watcher scripts..."
   sudo cp "$STATUS_SCRIPT" "$SCRIPT_PATH/watcher-status.sh"
   sudo cp "$HEALTH_SCRIPT" "$SCRIPT_PATH/watcher-health.sh"
+  sudo cp "$CURRENT_DIR/update_node.sh" "$SCRIPT_PATH/update_node.sh"
   sudo chmod +x "$SCRIPT_PATH/watcher-"*.sh
+  sudo chmod +x "$SCRIPT_PATH/update_node.sh"
   echo "✅ Scripts installed to $SCRIPT_PATH/"
 }
 
