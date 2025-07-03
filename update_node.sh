@@ -56,7 +56,7 @@ send_notifications() {
   CLIENT_SUMMARY=""
   CLIENT_SUMMARY_HTML=""
   for pattern in "${CLIENT_PATTERNS[@]}"; do
-    match=$(grep -i "$pattern" "$LOG_FILE" | head -n 3)
+    match=$(grep -i "$pattern" "$LOG_FILE" 2>/dev/null | head -n 3)
     if [[ -n "$match" ]]; then
       CLIENT_SUMMARY+="$match"$'\n'
       CLIENT_SUMMARY_HTML+="$match<br>"
@@ -64,7 +64,7 @@ send_notifications() {
   done
 
   # ========== 2. Extract log snippet for Telegram ==========
-  TAIL_LOG=$(tail -n 40 "$LOG_FILE" | head -c 3500 | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g')
+  TAIL_LOG=$(tail -n 40 "$LOG_FILE" 2>/dev/null | head -c 3500 | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g')
 
   # ========== 3. Build Telegram summary ==========
 
@@ -89,7 +89,7 @@ EOF
     --data-urlencode text="$TELEGRAM_MSG"
   # ========== 4. Extract update block for email ==========
   # ========== 4. Extract update block for email ==========
-  UPDATE_BLOCK=$(awk '/Running: ethd update/,/Post-Update Component Versions/' "$LOG_FILE" | sed 's/\x1b\[[0-9;]*m//g')
+  UPDATE_BLOCK=$(awk '/Running: ethd update/,/Post-Update Component Versions/' "$LOG_FILE" 2>/dev/null | sed 's/\x1b\[[0-9;]*m//g')
   UPDATE_BLOCK_HTML=$(echo "$UPDATE_BLOCK" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g' | awk '{print "<div style=\"font-family:monospace; white-space:pre; font-size:13px;\">" $0 "</div>"}')
 
   # ========== 5. HTML Email summary ==========
