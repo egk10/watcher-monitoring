@@ -14,23 +14,15 @@ cd watcher-monitoring
 ./install.sh
 ```
 
-## ⚡ Quick Install (.deb)
-}
-}
-}
+> **Note:** `install.sh` is now versioned (currently v3.2). It will always deploy the latest scripts to `/usr/local/bin/` and ensure systemd uses the correct version.
 
-}
-}
-```bash
-```
-wget https://github.com/egk10/watcher-monitoring/releases/download/v1.0.14/watcher-monitoring-v1.0.14.deb && sudo dpkg -i watcher-monitoring-v1.0.14.deb
+---
 
+🔐 **Environment Configuration: .watcher.env**
 
-🔐 Environment Configuration: .watcher.env
-
-Create a file named .watcher.env inside the repo root, or edit /etc/watcher/.watcher.env after install.
+Create a file named `.watcher.env` inside the repo root, or edit `/etc/watcher/.watcher.env` after install.
 Required Variables:
-```
+```env
 TELEGRAM_BOT_TOKEN=xxxxxxxxxxxxxxxxxxxxxx
 TELEGRAM_CHAT_ID=123456789
 GMAIL_USER=your-email@gmail.com
@@ -46,9 +38,8 @@ Notes:
 | Command                                  | Purpose                             |
 |------------------------------------------|-------------------------------------|
 | `watcher-status.sh`                      | Prints validator activity summary   |
-| `watcher-health.sh --force --debug`     | Sends test alert to Telegram        |
-| `systemctl list-timers | grep watcher`  | Shows next scheduled check          |
-
+| `watcher-health.sh --force --debug`      | Sends test alert to Telegram        |
+| `systemctl list-timers | grep watcher`   | Shows next scheduled check          |
 
 ```
 📁 Scripts installed to:     /usr/local/bin/
@@ -81,14 +72,17 @@ systemctl status update-node.timer
 
 ## 🧾 Changelog
 
+v3.2 — July 3, 2025
+
+    - install.sh versioning and redeployment logic improved
+    - Always redeploys latest update_node.sh to /usr/local/bin for systemd
+    - Documentation and usage clarified
+
 v1.0 — July 2, 2025
 
     🎉 Initial public release
-
     Telegram alerts and validator health
-
     Smart node update logic via update_node.sh
-
     .env template included
 
 ## 🩺 Coming Soon
@@ -99,4 +93,4 @@ v1.0 — July 2, 2025
 ## 💬 Contributing
 
 Open to PRs, ideas, and integrations. This toolkit is built for uptime, clarity, and independence — make it better and share it!
-    
+
