@@ -121,6 +121,7 @@ After=network-online.target
 
 [Service]
 Type=oneshot
+User=root
 ExecStart=${SCRIPT_PATH}/update_node.sh
 EOF
 
