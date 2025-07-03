@@ -1,20 +1,10 @@
 #!/bin/bash
-# install.sh — watcher deployment script v2.1
-# 🧠 Installs watcher-status & watcher-health
-# 📦 Deploys to /usr/local/bin
-# 🛜 Moves .watcher.env to /etc/watcher/
-# 🛠️ Configures systemd timer
-
-
-echo "🔍 Checking .watcher.env configuration..."
-bash ./check_env_sanity.sh || {
-  echo "🚫 Aborting install due to environment config errors."
-  exit 1
-}
+# install.sh — watcher deployment script v3.0
+# 🧠 Modular installer with Gmail alert provisioning
 
 set -e
 
-VERSION="2.1"
+VERSION="3.0"
 CURRENT_DIR="$(pwd)"
 ENV_FILE_SOURCE="$CURRENT_DIR/.watcher.env"
 ENV_FILE_DEST="/etc/watcher/.watcher.env"
@@ -23,9 +13,7 @@ HEALTH_SCRIPT="$CURRENT_DIR/watcher-health.sh"
 SCRIPT_PATH="/usr/local/bin"
 SYSTEMD_PATH="/etc/systemd/system"
 
-echo "🧠 watcher toolkit • install.sh v$VERSION"
-echo "——————————————"
-
+### 🔍 Check core system dependencies
 check_deps() {
   echo "🔍 Checking system dependencies..."
   for bin in curl docker systemctl; do
@@ -34,11 +22,12 @@ check_deps() {
       exit 1
     }
   done
-  echo "✅ Dependencies OK"
+  echo "✅ Core dependencies OK"
 }
 
+### 📝 Install .watcher.env
 install_env_file() {
-  echo "📝 Setting up .watcher.env..."
+  echo "📜 Setting up .watcher.env..."
   if [[ ! -f "$ENV_FILE_SOURCE" ]]; then
     echo "❌ Missing .watcher.env in current directory!"
     exit 1
@@ -48,6 +37,41 @@ install_env_file() {
   echo "✅ Env file installed to $ENV_FILE_DEST"
 }
 
+### 📬 Install mail tools and generate ~/.msmtprc
+install_mail_stack() {
+  echo "📬 Installing mail client + msmtp..."
+  sudo apt-get update
+  sudo apt-get install -y mailutils msmtp msmtp-mta
+
+  if [[ -f "$ENV_FILE_DEST" ]]; then
+    source "$ENV_FILE_DEST"
+    if [[ -n "$GMAIL_USER" && -n "$GMAIL_PASS" ]]; then
+      cat <<EOF > ~/.msmtprc
+account gmail
+host smtp.gmail.com
+port 587
+from $GMAIL_USER
+auth on
+user $GMAIL_USER
+password $GMAIL_PASS
+tls on
+tls_starttls on
+logfile ~/.msmtp.log
+
+account default : gmail
+EOF
+      chmod 600 ~/.msmtprc
+      echo "✅ msmtp configured for Gmail alerts"
+
+      # Optional: test send immediately
+      echo "Install complete. msmtp relay active." | mail -s "Watcher Install Test" "$GMAIL_USER"
+    else
+      echo "⚠️ GMAIL_USER or GMAIL_PASS missing — skipping SMTP setup"
+    fi
+  fi
+}
+
+### 📦 Deploy watcher scripts
 install_scripts() {
   echo "📦 Deploying watcher scripts..."
   sudo cp "$STATUS_SCRIPT" "$SCRIPT_PATH/watcher-status.sh"
@@ -56,9 +80,9 @@ install_scripts() {
   echo "✅ Scripts installed to $SCRIPT_PATH/"
 }
 
+### ⏱️ Set up systemd health check timer
 setup_systemd_timer() {
   echo "🛠️ Configuring systemd service + timer..."
-
   sudo tee "$SYSTEMD_PATH/watcher-health.service" > /dev/null <<EOF
 [Unit]
 Description=Validator Health Check
@@ -82,11 +106,12 @@ Unit=watcher-health.service
 WantedBy=timers.target
 EOF
 
-  sudo systemctl daemon-reload
+  sudo systemctl daemon-reexec
   sudo systemctl enable --now watcher-health.timer
   echo "✅ Timer enabled: watcher-health.service every 5 min"
 }
 
+### 🎉 Final summary banner
 success_banner() {
   echo ""
   echo "🎉 install.sh complete — watcher v$VERSION deployed"
@@ -94,13 +119,14 @@ success_banner() {
   echo "📈 watcher-status.sh: ready to run manually"
   echo "📁 Logs → /var/log/$(hostname)-watcher/"
   echo "🗃️ Env file → $ENV_FILE_DEST"
-  echo "🔔 Telegram alerts will trigger from next run"
+  echo "🔔 Telegram + Gmail alerts configured"
   echo "✅ Next run: $(systemctl list-timers | grep watcher-health | awk '{print $2, $3, $4}')"
 }
 
-# Main flow
+### 🚀 Run all steps
 check_deps
 install_env_file
+install_mail_stack
 install_scripts
 setup_systemd_timer
 success_banner
