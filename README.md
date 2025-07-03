@@ -17,7 +17,6 @@ cd watcher-monitoring
 ## ⚡ Quick Install (.deb)
 
 ```bash
-wget https://github.com/egk10/watcher-monitoring/releases/download/v1.0.6/watcher-monitoring-v1.0.6.deb wget https://github.com/egk10/watcher-monitoring/releases/download/v1.0.5/watcher-monitoring-v1.0.5.deb && sudo dpkg -i watcher-monitoring-v1.0.5.debwget https://github.com/egk10/watcher-monitoring/releases/download/v1.0.5/watcher-monitoring-v1.0.5.deb && sudo dpkg -i watcher-monitoring-v1.0.5.deb sudo dpkg -i watcher-monitoring-v1.0.6.deb
 ```
 
 
