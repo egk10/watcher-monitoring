@@ -1,0 +1,380 @@
+
+🔎 Pre-Update Component Versions:
+🧠 eth-docker version report:
+This is Eth Docker v2.15.3.0
+
+ssvnode version v2.3.2-faf5d0e17c04402373decf37646e65e9b2723cd4
+
+teku/v25.4.1/linux-x86_64/-eclipseadoptium-openjdk64bitservervm-java-21
+
+besu/v25.7.0/linux-x86_64/openjdk-java-21
+
+mev-boost v1.9.0
+
+prometheus, version 2.53.5 (branch: HEAD, revision: d344ea7bf4cc9e9e131a0318d10025982e9c4cc1)
+  build user:       root@31e33add4c49
+  build date:       20250630-10:18:05
+  go version:       go1.23.10
+  platform:         linux/amd64
+  tags:             netgo,builtinassets,stringlabels
+
+Grafana Version 12.0.2 (commit: 5bda17e7c1cb313eb96266f2fdda73a6b35c3977, branch: HEAD)
+
+
+📦 Running: ethd update && ethd up
+From https://github.com/eth-educators/eth-docker
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+Building local client images
+Total reclaimed space: 0B
+ consensus Skipped 
+ prometheus Skipped 
+ grafana Skipped 
+ mev-boost Skipped 
+ execution Skipped 
+ ethereum-metrics-exporter Pulling 
+ node-exporter Pulling 
+ blackbox-exporter Pulling 
+ ssv-node Pulling 
+ promtail Pulling 
+ json-exporter Pulling 
+ loki Pulling 
+ cadvisor Pulling 
+ set-prune-marker Pulling 
+ blackbox-exporter Pulled 
+ ssv-node Pulled 
+ node-exporter Pulled 
+ ethereum-metrics-exporter Pulled 
+ json-exporter Pulled 
+ loki Pulled 
+ promtail Pulled 
+ set-prune-marker Pulled 
+ cadvisor Pulled 
+Compose can now delegate builds to bake for better performance.
+ To do so, set COMPOSE_BAKE=true.
+#0 building with "default" instance using docker driver
+
+#1 [execution internal] load build definition from Dockerfile.binary
+#1 ...
+
+#2 [prometheus internal] load build definition from Dockerfile
+#2 transferring dockerfile: 627B done
+#2 DONE 0.2s
+
+#3 [consensus internal] load build definition from Dockerfile.binary
+#3 transferring dockerfile: 1.16kB done
+#3 DONE 0.3s
+
+#4 [consensus internal] load metadata for docker.io/consensys/teku:25.4.1
+#4 ...
+
+#5 [mev-boost internal] load build definition from Dockerfile.binary
+#5 transferring dockerfile: 443B done
+#5 DONE 0.3s
+
+#6 [grafana internal] load build definition from Dockerfile
+#6 transferring dockerfile: 792B done
+#6 DONE 0.3s
+
+#1 [execution internal] load build definition from Dockerfile.binary
+#1 transferring dockerfile: 1.15kB done
+#1 DONE 0.3s
+
+#7 [prometheus internal] load metadata for docker.io/prom/prometheus:latest
+#7 DONE 0.3s
+
+#8 [execution internal] load metadata for docker.io/hyperledger/besu:latest
+#8 DONE 0.3s
+
+#9 [grafana internal] load metadata for docker.io/grafana/grafana:latest
+#9 DONE 0.3s
+
+#10 [mev-boost internal] load metadata for docker.io/flashbots/mev-boost:latest
+#10 DONE 0.5s
+
+#11 [execution internal] load .dockerignore
+#11 transferring context: 2B done
+#11 DONE 0.3s
+
+#12 [execution 1/7] FROM docker.io/hyperledger/besu:latest@sha256:09317071e2742ca0530b504ad40f3efeba3a0ef85a0038917bc056865fce7c50
+#12 DONE 0.0s
+
+#13 [execution internal] load build context
+#13 DONE 0.0s
+
+#14 [grafana internal] load .dockerignore
+#14 transferring context: 2B done
+#14 DONE 0.3s
+
+#15 [prometheus internal] load metadata for docker.io/mikefarah/yq:4
+#15 DONE 0.8s
+
+#16 [mev-boost internal] load .dockerignore
+#16 transferring context: 2B done
+#16 DONE 0.3s
+
+#17 [mev-boost 1/2] FROM docker.io/flashbots/mev-boost:latest@sha256:d645b61893c006266d7d92a2b506c9b7b2609907e9734b408f69f4f3197617e2
+#17 DONE 0.0s
+
+#4 [consensus internal] load metadata for docker.io/consensys/teku:25.4.1
+#4 DONE 0.8s
+
+#18 [grafana  1/13] FROM docker.io/grafana/grafana:latest@sha256:b5b59bfc7561634c2d7b136c4543d702ebcc94a3da477f21ff26f89ffd4214fa
+#18 DONE 0.0s
+
+#19 [mev-boost 2/2] RUN adduser     --disabled-password     --gecos ""     --shell "/sbin/nologin"     --uid "10666"     "mev"
+#19 CACHED
+
+#20 [mev-boost] exporting to image
+#20 exporting layers done
+#20 writing image sha256:32543bdb9fa8447fd8663bc6856e678455020b743a90842c2a7a10d968e6aa2c 0.0s done
+#20 naming to docker.io/library/mev-boost:local 0.0s done
+#20 DONE 0.1s
+
+#21 [prometheus internal] load .dockerignore
+#21 transferring context: 2B done
+#21 DONE 0.3s
+
+#13 [execution internal] load build context
+#13 transferring context: 4.73kB done
+#13 DONE 0.2s
+
+#22 [consensus internal] load .dockerignore
+#22 transferring context: 2B done
+#22 DONE 0.2s
+
+#23 [grafana internal] load build context
+#23 transferring context: 27.97kB done
+#23 DONE 0.3s
+
+#24 [prometheus stage-1 1/9] FROM docker.io/prom/prometheus:latest@sha256:7a34573f0b9c952286b33d537f233cd5b708e12263733aa646e50c33f598f16c
+#24 DONE 0.0s
+
+#25 [prometheus yq 1/1] FROM docker.io/mikefarah/yq:4@sha256:7cf28e5d67782f4b274a93a7bc54a840b553447a0807efd843d069f46bff718c
+#25 DONE 0.0s
+
+#26 [execution 6/7] COPY --chown=besu:besu ./docker-entrypoint.sh /usr/local/bin/
+#26 CACHED
+
+#27 [execution 4/7] RUN mkdir -p /var/lib/besu-og && chown -R besu:besu /var/lib/besu-og && chmod -R 700 /var/lib/besu-og
+#27 CACHED
+
+#28 [execution 5/7] RUN mkdir -p /var/lib/besu/ee-secret && chown -R besu:besu /var/lib/besu && chmod -R 700 /var/lib/besu && chmod 777 /var/lib/besu/ee-secret
+#28 CACHED
+
+#29 [execution 2/7] RUN groupmod -g "10002" besu && usermod -u "10001" -g "10002" besu
+#29 CACHED
+
+#30 [execution 3/7] RUN set -eux;         apt-get update && DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -y gosu ca-certificates tzdata git git-lfs wget;         rm -rf /var/lib/apt/lists/*;         gosu nobody true
+#30 CACHED
+
+#31 [execution 7/7] RUN chmod -R 755 /usr/local/bin/*
+#31 CACHED
+
+#32 [consensus internal] load build context
+#32 DONE 0.0s
+
+#33 [grafana 11/13] COPY --chown=grafana:root ./default-alerts/*.yml /tmp/grafana/provisioning/alerting/
+#33 CACHED
+
+#34 [grafana  7/13] RUN chown -R grafana:root /etc/grafana/
+#34 CACHED
+
+#35 [grafana  5/13] RUN mkdir -p /etc/grafana/provisioning/alerting/
+#35 CACHED
+
+#36 [grafana  8/13] RUN chown -R grafana:root /tmp/grafana/
+#36 CACHED
+
+#37 [grafana  9/13] COPY --chown=grafana:root ./dashboard.yml /etc/grafana/provisioning/dashboards/
+#37 CACHED
+
+#38 [grafana  4/13] RUN mkdir -p /etc/grafana/provisioning/datasources/
+#38 CACHED
+
+#39 [grafana  6/13] RUN mkdir -p /tmp/grafana/provisioning/alerting/
+#39 CACHED
+
+#40 [grafana  3/13] RUN mkdir -p /etc/grafana/provisioning/dashboards/
+#40 CACHED
+
+#41 [grafana  2/13] RUN apk --update add wget tree jq sed su-exec
+#41 CACHED
+
+#42 [grafana 12/13] COPY --chown=grafana:root ./provision.sh /usr/local/bin/
+#42 CACHED
+
+#43 [grafana 10/13] COPY --chown=grafana:root ./datasource.yml /etc/grafana/provisioning/datasources/
+#43 CACHED
+
+#44 [grafana 13/13] RUN chmod -R 755 /usr/local/bin/*
+#44 CACHED
+
+#45 [grafana] exporting to image
+#45 exporting layers done
+#45 writing image sha256:22dba40d8f5899bac9d5af2c51e0433ad11bad9dda207ca31ddc863583da5b9e 0.0s done
+#45 naming to docker.io/library/grafana:local
+#45 naming to docker.io/library/grafana:local 0.0s done
+#45 DONE 0.1s
+
+#46 [execution] exporting to image
+#46 exporting layers done
+#46 writing image sha256:c8221eced536c3d5f33ace830198b08bcefbe3aaa4868c04e4456928bc603455 0.0s done
+#46 naming to docker.io/library/besu:local 0.0s done
+#46 DONE 0.1s
+
+#47 [prometheus internal] load build context
+#47 transferring context: 11.76kB done
+#47 DONE 0.1s
+
+#48 [prometheus stage-1 3/9] COPY base-config.yml rootless-base-config.yml /etc/prometheus/
+#48 CACHED
+
+#49 [prometheus stage-1 5/9] COPY ./docker-entrypoint.sh /usr/local/bin/
+#49 CACHED
+
+#50 [prometheus stage-1 4/9] COPY ./rootless/*.yml /etc/prometheus/rootless/
+#50 CACHED
+
+#51 [prometheus stage-1 7/9] RUN find /etc/prometheus -type d -exec chmod 755 {} ;
+#51 CACHED
+
+#52 [prometheus stage-1 2/9] COPY --from=yq /usr/bin/yq /usr/local/bin/yq
+#52 CACHED
+
+#53 [prometheus stage-1 6/9] RUN chmod -R 755 /usr/local/bin/*
+#53 CACHED
+
+#54 [prometheus stage-1 8/9] RUN find /etc/prometheus -type f -exec chmod 664 {} ;
+#54 CACHED
+
+#55 [prometheus stage-1 9/9] RUN chown -R nobody:nobody /etc/prometheus
+#55 CACHED
+
+#56 [prometheus] exporting to image
+#56 exporting layers done
+#56 writing image sha256:4605ad66de272b70a727a83a37238a0c6a94a2451f74c861a11b2f3bdbedefbb 0.0s done
+#56 naming to docker.io/library/prometheus:local
+#56 naming to docker.io/library/prometheus:local done
+#56 DONE 0.1s
+
+#57 [consensus 1/7] FROM docker.io/consensys/teku:25.4.1@sha256:bf6ecd2ea71675a40fad1354bde6fe4886f28bd7a7fcd2ca2633bc2ef424f88a
+#57 resolve docker.io/consensys/teku:25.4.1@sha256:bf6ecd2ea71675a40fad1354bde6fe4886f28bd7a7fcd2ca2633bc2ef424f88a 0.3s done
+#57 DONE 0.3s
+
+#32 [consensus internal] load build context
+#32 transferring context: 10.24kB done
+#32 DONE 0.2s
+
+#58 [consensus 4/7] RUN mkdir -p /var/lib/teku/validator-keys && mkdir -p /var/lib/teku/validator-passwords && mkdir -p /var/lib/teku/ee-secret && chown -R teku:teku /var/lib/teku && chmod -R 700 /var/lib/teku && chmod 777 /var/lib/teku/ee-secret
+#58 CACHED
+
+#59 [consensus 5/7] COPY --chown=teku:teku ./docker-entrypoint.sh /usr/local/bin/
+#59 CACHED
+
+#60 [consensus 6/7] COPY --chown=teku:teku ./docker-entrypoint-vc.sh /usr/local/bin/
+#60 CACHED
+
+#61 [consensus 2/7] RUN groupmod -g "10002" teku && usermod -u "10002" -g "10002" teku
+#61 CACHED
+
+#62 [consensus 3/7] RUN set -eux;         apt-get update;         DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -y gosu ca-certificates tzdata git git-lfs libjemalloc-dev;         rm -rf /var/lib/apt/lists/*;         gosu nobody true
+#62 CACHED
+
+#63 [consensus 7/7] RUN chmod -R 755 /usr/local/bin/*
+#63 CACHED
+
+#64 [mev-boost] resolving provenance for metadata file
+#64 DONE 0.0s
+
+#65 [execution] resolving provenance for metadata file
+#65 DONE 0.0s
+
+#66 [grafana] resolving provenance for metadata file
+#66 DONE 0.0s
+
+#67 [prometheus] resolving provenance for metadata file
+#67 DONE 0.0s
+
+#68 [consensus] exporting to image
+#68 exporting layers done
+#68 writing image sha256:66407522a070e31e852f4ad7504896b1b16343324acf4da26b09906fa833b37f 0.0s done
+#68 naming to docker.io/library/teku:local done
+#68 DONE 0.1s
+
+#69 [consensus] resolving provenance for metadata file
+#69 DONE 0.0s
+ consensus  Built
+ execution  Built
+ grafana  Built
+ mev-boost  Built
+ prometheus  Built
+
+No changes made to .env during update
+
+An "ethd up" command will start using the new images and configuration.
+
+WARNING
+
+You have uncommitted local changes to Eth Docker, which may interfere with updates.
+Please undo these changes or "git commit" them.
+These are the files with local changes:
+
+ D .eth/validator_keys/.empty
+?? check-relays.sh
+?? config.yaml
+?? custom-ssv.yml
+?? encrypted_private_key.json
+?? logs/
+?? password.pass
+?? ssv-config/ssv1186/
+
+You are in a screen or tmux session. This is good!
+"ethd update" may have started it for you to ensure the update finishes.
+When you are done, remember to "exit" the session.
+
+ Container eth-docker-ssv-node-1  Running
+ Container eth-docker-loki-1  Running
+ Container eth-docker-node-exporter-1  Running
+ Container eth-docker-mev-boost-1  Running
+ Container eth-docker-consensus-1  Running
+ Container eth-docker-blackbox-exporter-1  Running
+ Container eth-docker-json-exporter-1  Running
+ Container eth-docker-cadvisor-1  Running
+ Container eth-docker-execution-1  Running
+ Container eth-docker-grafana-1  Running
+ Container eth-docker-promtail-1  Running
+ Container eth-docker-prometheus-1  Running
+ Container eth-docker-ethereum-metrics-exporter-1  Running
+
+🔍 Post-Update Component Versions:
+🧠 eth-docker version report:
+This is Eth Docker v2.15.3.0
+
+ssvnode version v2.3.2-faf5d0e17c04402373decf37646e65e9b2723cd4
+
+teku/v25.4.1/linux-x86_64/-eclipseadoptium-openjdk64bitservervm-java-21
+
+besu/v25.7.0/linux-x86_64/openjdk-java-21
+
+mev-boost v1.9.0
+
+prometheus, version 2.53.5 (branch: HEAD, revision: d344ea7bf4cc9e9e131a0318d10025982e9c4cc1)
+  build user:       root@31e33add4c49
+  build date:       20250630-10:18:05
+  go version:       go1.23.10
+  platform:         linux/amd64
+  tags:             netgo,builtinassets,stringlabels
+
+Grafana Version 12.0.2 (commit: 5bda17e7c1cb313eb96266f2fdda73a6b35c3977, branch: HEAD)
+
+
+⛓️ Validator Health Summary (placeholder for beaconcha.in stats)
+
+📬 Summary delivered by eliedesk-watcher · graffiti: brazilpracima · version: v1.9
+
+📓 Log file saved to: /home/egk/logs/eliedesk-watcher/update_report-2025-07-03.txt
+{"ok":true,"result":{"message_id":117,"from":{"id":7628834171,"is_bot":true,"first_name":"eliedesknode","username":"eliedeskbot"},"chat":{"id":1114550199,"first_name":"egk10.eth","username":"egk10","type":"private"},"date":1751568566,"text":"\u2705 Watcher Complete: $HOSTNAME\n\ud83e\udeaa Graffiti: $GRAFFITI\n\ud83d\udee0 Version: v$SCRIPT_VERSION\n\ud83d\udd52 UTC: $(date -u '+%Y-%m-%d %H:%M')\n\n\ud83d\udce6 Clients:\n$CLIENT_SUMMARY\n\n\ud83d\udcd3 Log Tail:\n$TAIL_LOG","entities":[{"offset":2,"length":18,"type":"bold"},{"offset":20,"length":9,"type":"cashtag"},{"offset":20,"length":9,"type":"bold"},{"offset":33,"length":9,"type":"bold"},{"offset":43,"length":9,"type":"cashtag"},{"offset":56,"length":8,"type":"bold"},{"offset":85,"length":4,"type":"bold"},{"offset":123,"length":8,"type":"bold"},{"offset":132,"length":15,"type":"pre"},{"offset":152,"length":9,"type":"bold"},{"offset":162,"length":9,"type":"pre"}]}}sed: -e expressão #1, caractere 6: comando `s' não terminado
+
+[32m👁️ Watching since Epoch Zero · graffiti: brazilpracima[0m
+

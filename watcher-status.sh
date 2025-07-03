@@ -1,19 +1,25 @@
 #!/bin/bash
 
+# --- Config & Paths ---
 HOSTNAME=$(hostname)
 SCRIPT_PATH="/usr/local/bin/update_node.sh"
 ENV_PATH="$(dirname "$0")/.watcher.env"
-
-VERSION=$(grep SCRIPT_VERSION "$SCRIPT_PATH" | cut -d'"' -f2)
-SCHEDULE=$(cat /usr/local/share/minipool-watcher.schedule 2>/dev/null || echo "N/A")
 VERSION_FILE="/usr/local/share/minipool-watcher.version"
-LAST_LOG=$(ls -1t /var/log/${HOSTNAME}-watcher/update_report-*.txt 2>/dev/null | head -n 1)
-EMAIL=$(grep EMAIL_TO "$ENV_PATH" | cut -d'"' -f2)
+SCHEDULE_FILE="/usr/local/share/minipool-watcher.schedule"
+LOG_DIR="/var/log/${HOSTNAME}-watcher"
+
+# --- Data Extraction ---
+VERSION=$(grep SCRIPT_VERSION "$SCRIPT_PATH" | cut -d'"' -f2 2>/dev/null || echo "N/A")
+SCHEDULE=$(cat "$SCHEDULE_FILE" 2>/dev/null || echo "N/A")
+LAST_LOG=$(ls -1t "$LOG_DIR"/update_report-*.txt 2>/dev/null | head -n 1)
+EMAIL=$(grep EMAIL_TO "$ENV_PATH" | cut -d'"' -f2 2>/dev/null || echo "N/A")
 GRAFFITI=$(grep -m1 '^GRAFFITI=' "$HOME/eth-docker/.env" 2>/dev/null | cut -d'=' -f2)
 if [[ -z "$GRAFFITI" ]]; then
-  GRAFFITI=$(grep -m1 '^GRAFFITI=' "$(dirname "$0")/.watcher.env" | cut -d'"' -f2)
+  GRAFFITI=$(grep -m1 '^GRAFFITI=' "$ENV_PATH" | cut -d'"' -f2)
 fi
+GRAFFITI=${GRAFFITI:-N/A}
 
+# --- Output ---
 echo "🛰️  watcher status · node: $HOSTNAME"
 echo "--------------------------------------------"
 echo "🔧 Installed Version    : v$VERSION"
@@ -21,9 +27,11 @@ echo "🪪 Graffiti Tag         : $GRAFFITI"
 echo "📬 Email Recipient      : $EMAIL"
 echo "📅 Scheduled Time       : $SCHEDULE"
 
-echo -n "🕒 Next Run (from timer): "
-systemctl list-timers --all update-node.timer | awk 'NR==2 {print $1, $2, $3}'
+# Next run (from timer)
+NEXT_RUN=$(systemctl list-timers --all update-node.timer | awk 'NR==2 {print $1, $2, $3}')
+echo "🕒 Next Run (from timer): ${NEXT_RUN:-N/A}"
 
+# Last update log
 if [[ -f "$LAST_LOG" ]]; then
   LOG_DATE=$(basename "$LAST_LOG" | cut -d'-' -f3)
   echo "📓 Last Update Log      : $LOG_DATE → $LAST_LOG"
@@ -31,8 +39,53 @@ else
   echo "📓 Last Update Log      : (none found)"
 fi
 
-echo -n "🟢 Service Status        : "
-systemctl is-active update-node.service
+# Service status
+SERVICE_STATUS=$(systemctl is-active update-node.service 2>/dev/null)
+case "$SERVICE_STATUS" in
+  active)
+    echo "🟢 Service Status        : active"
+    ;;
+  inactive)
+    echo "🔴 Service Status        : inactive"
+    ;;
+  *)
+    echo "⚪ Service Status        : $SERVICE_STATUS"
+    ;;
+esac
 
-echo -n "⏱️  Timer Status          : "
-systemctl is-active update-node.timer
+# Timer status
+TIMER_STATUS=$(systemctl is-active update-node.timer 2>/dev/null)
+case "$TIMER_STATUS" in
+  active)
+    echo "⏱️  Timer Status          : active"
+    ;;
+  inactive)
+    echo "⏱️  Timer Status          : inactive"
+    ;;
+  *)
+    echo "⏱️  Timer Status          : $TIMER_STATUS"
+    ;;
+esac
+
+# Show last 3 log summaries if available
+echo ""
+echo "📝 Recent Update Logs:"
+LOGS=($(ls -1t "$LOG_DIR"/update_report-*.txt 2>/dev/null | head -n 3))
+if [[ ${#LOGS[@]} -eq 0 ]]; then
+  echo "  (none found)"
+else
+  for log in "${LOGS[@]}"; do
+    log_date=$(basename "$log" | cut -d'-' -f3)
+    # Clean summary: remove HTML, variable expansions, color codes, and empty lines
+    summary=$(grep -m1 -E '^(SUCCESS|FAIL|ERROR|WARN)' "$log" 2>/dev/null | \
+      sed -E 's/<[^>]+>//g' | \
+      sed -E 's/\\$\{?[A-Z0-9_]+\}?//g' | \
+      sed -E 's/\\x1B\[[0-9;]*[mK]//g' | \
+      sed 's/^ *//;s/ *$//' | \
+      grep -vE '^$')
+    if [[ -z "$summary" ]]; then
+      summary="(no summary)"
+    fi
+    echo "  $log_date: $summary"
+  done
+fi

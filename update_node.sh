@@ -5,13 +5,6 @@ SCRIPT_VERSION="1.9"
 source "$(dirname "$0")/.watcher.env"
 GRAFFITI="brazilpracima"
 HOSTNAME=$(hostname)
-DATE=$(date -u +%F)
-LOG_FILE="$LOG_DIR/update_report-$DATE.txt"
-CHANGELOG_FILE="$LOG_DIR/watcher-changelog.log"
-DRYRUN=false
-GREEN="\e[32m"
-YELLOW="\e[33m"
-RESET="\e[0m"
 
 # 🔐 Smart log directory fallback if /var/log is unwritable
 if [ -w "/var/log" ]; then
@@ -20,6 +13,13 @@ else
   LOG_DIR="$HOME/logs/${HOSTNAME}-watcher"
 fi
 
+DATE=$(date -u +%F)
+LOG_FILE="$LOG_DIR/update_report-$DATE.txt"
+CHANGELOG_FILE="$LOG_DIR/watcher-changelog.log"
+DRYRUN=false
+GREEN="\e[32m"
+YELLOW="\e[33m"
+RESET="\e[0m"
 
 # 🔍 Smart detection of ethd binary location
 detect_ethd_binary() {
