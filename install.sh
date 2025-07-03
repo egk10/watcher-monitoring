@@ -111,12 +111,44 @@ EOF
   echo "✅ Timer enabled: watcher-health.service every 5 min"
 }
 
+### ⏰ Set up systemd node update timer
+deploy_update_timer() {
+  echo "🛠️ Configuring systemd service + timer for update_node.sh..."
+  sudo tee "$SYSTEMD_PATH/update-node.service" > /dev/null <<EOF
+[Unit]
+Description=Ethereum Node Update
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=${SCRIPT_PATH}/update_node.sh
+EOF
+
+  sudo tee "$SYSTEMD_PATH/update-node.timer" > /dev/null <<EOF
+[Unit]
+Description=Run Ethereum node update daily
+
+[Timer]
+OnCalendar=daily
+RandomizedDelaySec=14400
+Unit=update-node.service
+
+[Install]
+WantedBy=timers.target
+EOF
+
+  sudo systemctl daemon-reexec
+  sudo systemctl enable --now update-node.timer
+  echo "✅ Timer enabled: update-node.service daily with random delay"
+}
+
 ### 🎉 Final summary banner
 success_banner() {
   echo ""
   echo "🎉 install.sh complete — watcher v$VERSION deployed"
-  echo "📡 watcher-health.sh: scheduled via systemd"
-  echo "📈 watcher-status.sh: ready to run manually"
+  echo "📡 watcher-health.sh: scheduled via systemd (service: watcher-health.service, timer: watcher-health.timer)"
+  echo "🔄 update_node.sh: scheduled via systemd (service: update-node.service, timer: update-node.timer, daily, randomized time)"
+  echo "� watcher-status.sh: ready to run manually"
   echo "📁 Logs → /var/log/$(hostname)-watcher/"
   echo "🗃️ Env file → $ENV_FILE_DEST"
   echo "🔔 Telegram + Gmail alerts configured"
@@ -129,5 +161,6 @@ install_env_file
 install_mail_stack
 install_scripts
 setup_systemd_timer
+deploy_update_timer
 success_banner
 exit 0

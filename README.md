@@ -49,13 +49,27 @@ Notes:
 | `watcher-health.sh --force --debug`     | Sends test alert to Telegram        |
 | `systemctl list-timers | grep watcher`  | Shows next scheduled check          |
 
+
 ```
 📁 Scripts installed to:     /usr/local/bin/
-🔐 Environment file:        /etc/watcher/.watcher.env
-🕒 Systemd timer active:     watcher-health.service (every 5 min)
+🔐 Environment file:         /etc/watcher/.watcher.env
+🕒 Systemd timers active:
+    watcher-health.service (every 5 min)
+    update-node.service (daily, randomized time)
 📈 Manual summary check:     watcher-status.sh
 📡 Trigger test alert:       watcher-health.sh --force --debug
-🗂️  Logs directory:          /var/log/eliedesk-watcher/
+🗂️  Logs directory:          /var/log/<hostname>-watcher/
+```
+
+### 🔍 Systemd Service Status Commands
+
+Check the status of the installed services and timers:
+
+```bash
+systemctl status watcher-health.service
+systemctl status watcher-health.timer
+systemctl status update-node.service
+systemctl status update-node.timer
 ```
 
 ## 🛠 Requirements
@@ -85,4 +99,4 @@ v1.0 — July 2, 2025
 ## 💬 Contributing
 
 Open to PRs, ideas, and integrations. This toolkit is built for uptime, clarity, and independence — make it better and share it!
-	
+    
