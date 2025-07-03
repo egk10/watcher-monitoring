@@ -6,6 +6,9 @@ source /etc/watcher/.watcher.env
 GRAFFITI="brazilpracima"
 HOSTNAME=$(hostname)
 
+# Explicit eth-docker path for root/systemd
+ETH_DOCKER_PATH="/home/egk/eth-docker"
+
 # 🔐 Smart log directory fallback if /var/log is unwritable
 if [ -w "/var/log" ]; then
   LOG_DIR="/var/log/${HOSTNAME}-watcher"
@@ -34,8 +37,8 @@ RESET="\e[0m"
 
 # 🔍 Smart detection of ethd binary location
 detect_ethd_binary() {
-  if [[ -x "$HOME/eth-docker/ethd" ]]; then
-    echo "$HOME/eth-docker/ethd"
+  if [[ -x "$ETH_DOCKER_PATH/ethd" ]]; then
+    echo "$ETH_DOCKER_PATH/ethd"
   elif [[ -x "$HOME/eth2-docker/ethd" ]]; then
     echo "$HOME/eth2-docker/ethd"
   elif command -v ethd &> /dev/null; then
