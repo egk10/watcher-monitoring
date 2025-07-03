@@ -34,12 +34,14 @@ install_env_file() {
     read -rp "TELEGRAM_BOT_TOKEN: " TELEGRAM_BOT_TOKEN
     read -rp "TELEGRAM_CHAT_ID: " TELEGRAM_CHAT_ID
     read -rp "GMAIL_USER: " GMAIL_USER
-    read -rsp "GMAIL_PASS (input hidden): " GMAIL_PASS; echo
+    read -rp "EMAIL_TO (recipient for email alerts): " EMAIL_TO
+    read -rsp "GMAIL_PASS (input hidden, wrap in single quotes if it contains spaces): " GMAIL_PASS; echo
     cat > "$ENV_FILE_SOURCE" <<EOF
 TELEGRAM_BOT_TOKEN=$TELEGRAM_BOT_TOKEN
 TELEGRAM_CHAT_ID=$TELEGRAM_CHAT_ID
 GMAIL_USER=$GMAIL_USER
 GMAIL_PASS=$GMAIL_PASS
+EMAIL_TO=$EMAIL_TO
 EOF
     echo "✅ .watcher.env created in current directory."
   fi
