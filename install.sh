@@ -1,10 +1,10 @@
 #!/bin/bash
-# install.sh — watcher deployment script v3.2
+# install.sh — watcher deployment script v3.3
 # 🧠 Modular installer with Gmail alert provisioning
 
 set -e
 
-VERSION="3.2"
+VERSION="3.3"
 CURRENT_DIR="$(pwd)"
 ENV_FILE_SOURCE="$CURRENT_DIR/.watcher.env"
 ENV_FILE_DEST="/etc/watcher/.watcher.env"
@@ -29,8 +29,19 @@ check_deps() {
 install_env_file() {
   echo "📜 Setting up .watcher.env..."
   if [[ ! -f "$ENV_FILE_SOURCE" ]]; then
-    echo "❌ Missing .watcher.env in current directory!"
-    exit 1
+    echo "⚠️  .watcher.env not found in current directory."
+    echo "Let's create it now. Please enter the required values:"
+    read -rp "TELEGRAM_BOT_TOKEN: " TELEGRAM_BOT_TOKEN
+    read -rp "TELEGRAM_CHAT_ID: " TELEGRAM_CHAT_ID
+    read -rp "GMAIL_USER: " GMAIL_USER
+    read -rsp "GMAIL_PASS (input hidden): " GMAIL_PASS; echo
+    cat > "$ENV_FILE_SOURCE" <<EOF
+TELEGRAM_BOT_TOKEN=$TELEGRAM_BOT_TOKEN
+TELEGRAM_CHAT_ID=$TELEGRAM_CHAT_ID
+GMAIL_USER=$GMAIL_USER
+GMAIL_PASS=$GMAIL_PASS
+EOF
+    echo "✅ .watcher.env created in current directory."
   fi
   sudo mkdir -p "$(dirname "$ENV_FILE_DEST")"
   sudo cp "$ENV_FILE_SOURCE" "$ENV_FILE_DEST"

@@ -8,6 +8,11 @@ Monitor missed attestations, send Telegram alerts, update your node, and manage 
 
 ## 🚀 Manual Install
 
+> **Before you run the install script:**
+>
+> 1. **Create a `.watcher.env` file** in the repo root with your secrets (see below for required variables).
+> 2. If you skip this step, the installer will interactively prompt you for the required values and generate the file for you.
+
 ```bash
 git clone https://github.com/egk10/watcher-monitoring.git ~/watcher-monitoring
 cd watcher-monitoring
@@ -20,7 +25,8 @@ cd watcher-monitoring
 
 🔐 **Environment Configuration: .watcher.env**
 
-Create a file named `.watcher.env` inside the repo root, or edit `/etc/watcher/.watcher.env` after install.
+Create a file named `.watcher.env` inside the repo root **before running `./install.sh`**, or let the installer prompt you for the required values. You can also edit `/etc/watcher/.watcher.env` after install.
+
 Required Variables:
 ```env
 TELEGRAM_BOT_TOKEN=xxxxxxxxxxxxxxxxxxxxxx
@@ -77,6 +83,7 @@ v3.2 — July 3, 2025
     - install.sh versioning and redeployment logic improved
     - Always redeploys latest update_node.sh to /usr/local/bin for systemd
     - Documentation and usage clarified
+    - Interactive .watcher.env setup if missing
 
 v1.0 — July 2, 2025
 
