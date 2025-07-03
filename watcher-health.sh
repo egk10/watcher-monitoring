@@ -108,24 +108,22 @@ run_forced_alert() {
 
 # --- Log Scanner ---
 scan_logs() {
-  LOGS=$(docker logs --since "$SINCE_TS" "$BEACON_CONTAINER" 2>&1)
-  LOG_LINES=$(echo "$LOGS" | wc -l)
-  missed_att=$(echo "$LOGS" | grep -cE \
-  "Timed out waiting for attestation|Failed to publish attestation|Previous epoch attestation\(s\) missing|Previous epoch attestation\(s\) failed to match head|Previous epoch attestation\(s\) failed to match target")
-  missed_blk=$(echo "$LOGS" | grep -cE "Failed to propose block|No block to propose")
+  # Use Consensus API to check for missed attestations/blocks
+  API_URL="http://localhost:5052"
+  # Get current epoch
+  CURRENT_EPOCH=$(curl -s "$API_URL/eth/v1/beacon/headers" | jq -r '.data[0].header.message.slot' | awk '{print int($1/32)}')
+  # Get validator performance for last epoch
+  PERFORMANCE=$(curl -s "$API_URL/eth/v1/validator/performance?epoch=$((CURRENT_EPOCH-1))")
+  MISSED_ATTESTATIONS=$(echo "$PERFORMANCE" | jq '.data.missed_attestations // 0')
+  MISSED_BLOCKS=$(echo "$PERFORMANCE" | jq '.data.missed_blocks // 0')
 
-  report_status "📦 Scanned $LOG_LINES lines since $SINCE_TS"
-  report_status "🔍 Attestation errors: $missed_att"
-  report_status "🔍 Proposal errors:    $missed_blk"
+  report_status "🔍 Consensus API: Missed attestations: $MISSED_ATTESTATIONS, missed blocks: $MISSED_BLOCKS (epoch $((CURRENT_EPOCH-1)))"
 
-  if (( missed_att + missed_blk > 0 )); then
+  if (( MISSED_ATTESTATIONS > 0 || MISSED_BLOCKS > 0 )); then
     local body=""
-    (( missed_att > 0 )) && body+="• Missed attestations: $missed_att\n"
-    (( missed_blk > 0 )) && body+="• Missed proposals: $missed_blk\n"
-    send_alert "CRIT" "Validator Duties Failed · $HOSTNAME" "$body"
-  else
-    send_alert "OK" "Validator Health Check · $HOSTNAME" \
-               "• No missed duties in last $LOG_WINDOW_MINUTES minutes."
+    (( MISSED_ATTESTATIONS > 0 )) && body+="• Missed attestations: $MISSED_ATTESTATIONS\n"
+    (( MISSED_BLOCKS > 0 )) && body+="• Missed blocks: $MISSED_BLOCKS\n"
+    send_alert "CRIT" "Consensus Duties Missed · $HOSTNAME" "$body"
   fi
 }
 
