@@ -1,5 +1,5 @@
 #!/bin/bash
-# install.sh — watcher deployment script v3.1
+# install.sh — watcher deployment script v3.2
 # 🧠 Modular installer with Gmail alert provisioning
 
 set -e
