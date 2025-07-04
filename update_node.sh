@@ -6,8 +6,9 @@ source /etc/watcher/.watcher.env
 GRAFFITI="brazilpracima"
 HOSTNAME=$(hostname)
 
-# Explicit eth-docker path for root/systemd
+# Always use explicit eth-docker path for all nodes
 ETH_DOCKER_PATH="/home/egk/eth-docker"
+echo "DEBUG: Using ETH_DOCKER_PATH=$ETH_DOCKER_PATH, USER=$(whoami), HOME=$HOME" >> /tmp/update_node_debug.log
 
 # 🔐 Smart log directory fallback if /var/log is unwritable
 
