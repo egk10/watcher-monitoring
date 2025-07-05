@@ -207,7 +207,12 @@ success_banner() {
   echo "📁 Logs → /var/log/$(hostname)-watcher/"
   echo "🗃️ Env file → $ENV_FILE_DEST"
   echo "🔔 Telegram + Gmail alerts configured"
-  echo "✅ Next run: $(systemctl list-timers | grep watcher-health | awk '{print $2, $3, $4}')"
+  echo ""
+  echo "--- Systemd Timers Status ---"
+  systemctl list-timers --all | grep -E 'watcher-health|update-node|update-watcher' || echo 'No watcher timers found.'
+  echo "----------------------------"
+  echo ""
+  echo "✅ Next watcher-health run: $(systemctl list-timers | grep watcher-health | awk '{print $2, $3, $4}')"
 }
 
 ### 🚀 Run all steps

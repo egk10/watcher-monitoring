@@ -71,73 +71,71 @@ EMAIL_TO=your-email@gmail.com
 - Gmail Credentials: You must use a Gmail App Password → https://myaccount.google.com/security (not your regular password)
 - EMAIL_TO: The email address to receive notifications (can be the same as GMAIL_USER)
 
-## 📡 Usage
 
-| Command                                  | Purpose                             |
-|------------------------------------------|-------------------------------------|
-| `watcher-status.sh`                      | Prints validator activity summary   |
-| `watcher-health.sh --force --debug`      | Sends test alert to Telegram        |
-| `systemctl list-timers | grep watcher`   | Shows next scheduled check          |
+## 📡 Usage & Systemd Monitoring
 
+| Command                                          | Purpose                                 |
+|--------------------------------------------------|-----------------------------------------|
+| `watcher-status.sh`                              | Prints validator activity summary       |
+| `watcher-health.sh --force --debug`              | Sends test alert to Telegram            |
+| `systemctl list-timers --all | grep watcher`     | Shows all watcher-related timers        |
+
+**Quick System Overview:**
 ```
 📁 Scripts installed to:     /usr/local/bin/
 🔐 Environment file:         /etc/watcher/.watcher.env
 🕒 Systemd timers active:
     watcher-health.service (every 5 min)
     update-node.service (daily, randomized time)
+    update-watcher.service (daily, randomized time)
 📈 Manual summary check:     watcher-status.sh
 📡 Trigger test alert:       watcher-health.sh --force --debug
 🗂️  Logs directory:          /var/log/<hostname>-watcher/
 ```
 
-### 🔍 Systemd Service Status Commands
-
-Check the status of the installed services and timers:
-
+To check the status and next run of all watcher-related systemd timers at any time, use:
 ```bash
-systemctl status watcher-health.service
-systemctl status watcher-health.timer
-systemctl status update-node.service
-systemctl status update-node.timer
+systemctl list-timers --all | grep watcher
 ```
+
 
 ## 🛠 Requirements
 
-- Docker  
-- curl  
-- systemd  
-- eth-docker or compatible beacon client  
+- Docker
+- curl
+- systemd
+- eth-docker or compatible beacon client
+
 
 ## 🧾 Changelog
 
 v3.4 — July 4, 2025
 
-    - Added update_watcher.sh for one-command updates on all nodes
-    - README: clarified update instructions, now recommends always syncing with GitHub before install
-    - Automated update instructions for clusters
-    - install.sh and update_node.sh: always use explicit eth-docker path for systemd/root
-    - All scripts: robust log directory permission handling
-    - .watcher.env creation and quoting instructions improved
-    - Changelog and documentation improvements
+  - Automated update_watcher.sh via systemd timer (auto-updates from GitHub)
+  - README: streamlined, added systemctl list-timers instructions
+  - install.sh and update_node.sh: always use explicit eth-docker path for systemd/root
+  - All scripts: robust log directory permission handling
+  - .watcher.env creation and quoting instructions improved
+  - Changelog and documentation improvements
 
 v3.3 — July 3, 2025
 
-    - install.sh versioning and redeployment logic improved
-    - Always redeploys latest update_node.sh to /usr/local/bin for systemd
-    - Documentation and usage clarified
-    - Interactive .watcher.env setup if missing
-    - EMAIL_TO now required and documented
-    - Instructions for handling spaces in secrets
-    - No need to manually create .watcher.env (installer is interactive)
-    - Added update instructions for all nodes
-    - Added update_watcher.sh automation script
+  - install.sh versioning and redeployment logic improved
+  - Always redeploys latest update_node.sh to /usr/local/bin for systemd
+  - Documentation and usage clarified
+  - Interactive .watcher.env setup if missing
+  - EMAIL_TO now required and documented
+  - Instructions for handling spaces in secrets
+  - No need to manually create .watcher.env (installer is interactive)
+  - Added update instructions for all nodes
+  - Added update_watcher.sh automation script
 
 v1.0 — July 2, 2025
 
-    🎉 Initial public release
-    Telegram alerts and validator health
-    Smart node update logic via update_node.sh
-    .env template included
+  🎉 Initial public release
+  Telegram alerts and validator health
+  Smart node update logic via update_node.sh
+  .env template included
 
 ## 🩺 Coming Soon
 
