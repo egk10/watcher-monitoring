@@ -14,7 +14,10 @@ if [[ ! -w "$LOG_DIR" ]]; then
   echo "⚠️  Log directory $LOG_DIR not writable by $(whoami). Attempting to fix..."
   sudo chown $(whoami):$(whoami) "$LOG_DIR"
   if [[ ! -w "$LOG_DIR" ]]; then
-    echo "❌ Still cannot write to log directory. Exiting."
+    echo "❌ Still cannot write to log directory."
+    echo "💡 To fix, run:"
+    echo "    sudo chown -R $(whoami):$(whoami) $LOG_DIR && sudo chmod -R u+rwX $LOG_DIR"
+    echo "Then re-run this script as your normal user."
     exit 1
   fi
 fi
