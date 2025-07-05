@@ -6,49 +6,25 @@ Make Ethereum independent node operators great again 💪
 Monitor missed attestations, send Telegram alerts, update your node, and manage validator health — all via shell scripts built for uptime and clarity.
 ---
 
-## 🚀 Manual Install & Update
 
-> **Setup is interactive!**
+## 🚀 Install Instructions
+
+> **Quick Start:**
 >
-> - Always update your repo before install by running:
->   ```bash
->   git fetch origin && git reset --hard origin/main
->   ```
-> - Then run `./install.sh` (it will prompt you for all required secrets if `.watcher.env` is missing).
-> - Optionally, you may pre-create a `.watcher.env` file in the repo root (see below for required variables) to skip the prompts.
-> - **If any value contains spaces, wrap it in single quotes (e.g. 'my app password').**
-
-```bash
-git fetch origin && git reset --hard origin/main
-./install.sh
-```
-
-> **Note:** `install.sh` is now versioned (currently v3.3). It will always deploy the latest scripts to `/usr/local/bin/` and ensure systemd uses the correct version.
-
----
-
-## 🔄 Updating Watcher on Any Node (Automated)
-
-To update your watcher scripts and systemd services from GitHub on any node, run:
-
-```bash
-./update_watcher.sh
-```
-
-Create this helper script as `update_watcher.sh` in your repo:
-```bash
-#!/bin/bash
-git fetch origin && git reset --hard origin/main
-./install.sh
-sudo systemctl restart update-node.service
-sudo systemctl status update-node.service
-```
-Make it executable:
-```bash
-chmod +x update_watcher.sh
-```
-
-This will always sync your node to the latest version from GitHub and redeploy all scripts and systemd units.
+> 1. **Clone the repository:**
+>    ```bash
+>    git clone https://github.com/egk10/watcher-monitoring.git
+>    cd watcher-monitoring
+>    ```
+> 2. **Run the installer:**
+>    ```bash
+>    ./install.sh
+>    ```
+>    The installer is interactive and will prompt you for all required secrets if `.watcher.env` is missing. Optionally, you may pre-create a `.watcher.env` file in the repo root (see below for required variables) to skip the prompts.
+> 3. **That's it!**
+>    - All scripts and systemd timers (including auto-updates) are deployed automatically.
+>    - No manual update steps are needed—your node will always stay up to date.
+>    - **If any value contains spaces, wrap it in single quotes (e.g. 'my app password').**
 
 ---
 
