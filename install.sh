@@ -163,6 +163,37 @@ EOF
   sudo systemctl daemon-reexec
   sudo systemctl enable --now update-node.timer
   echo "✅ Timer enabled: update-node.service daily with random delay"
+
+  # --- Add update_watcher.sh systemd automation ---
+  echo "🛠️ Configuring systemd service + timer for update_watcher.sh..."
+  sudo tee "$SYSTEMD_PATH/update-watcher.service" > /dev/null <<EOF
+[Unit]
+Description=Watcher Monitoring: Auto-update from GitHub
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=$CURRENT_DIR
+ExecStart=$CURRENT_DIR/update_watcher.sh
+EOF
+
+  sudo tee "$SYSTEMD_PATH/update-watcher.timer" > /dev/null <<EOF
+[Unit]
+Description=Run watcher-monitoring auto-update daily
+
+[Timer]
+OnCalendar=daily
+RandomizedDelaySec=18000
+Unit=update-watcher.service
+
+[Install]
+WantedBy=timers.target
+EOF
+
+  sudo systemctl daemon-reexec
+  sudo systemctl enable --now update-watcher.timer
+  echo "✅ Timer enabled: update-watcher.service daily with random delay"
 }
 
 ### 🎉 Final summary banner
@@ -171,6 +202,7 @@ success_banner() {
   echo "🎉 install.sh complete — watcher v$VERSION deployed"
   echo "📡 watcher-health.sh: scheduled via systemd (service: watcher-health.service, timer: watcher-health.timer)"
   echo "🔄 update_node.sh: scheduled via systemd (service: update-node.service, timer: update-node.timer, daily, randomized time)"
+  echo "🔁 update_watcher.sh: scheduled via systemd (service: update-watcher.service, timer: update-watcher.timer, daily, randomized time)"
   echo "� watcher-status.sh: ready to run manually"
   echo "📁 Logs → /var/log/$(hostname)-watcher/"
   echo "🗃️ Env file → $ENV_FILE_DEST"
