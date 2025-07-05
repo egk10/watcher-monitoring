@@ -18,6 +18,11 @@ NOW_TS=$(date -u '+%Y-%m-%d %H:%M:%S UTC')
 HOSTNAME=$(hostname)
 SINCE_TS=$(date -u -d "$LOG_WINDOW_MINUTES minutes ago" +%Y-%m-%dT%H:%M:%SZ)
 ALERT_LOG="/var/log/${HOSTNAME}-watcher/health-alerts.log"
+# --- Extra Info for Alerts ---
+SCRIPT_VERSION="3.4"
+GRAFFITI="$(grep -m1 graffiti /etc/watcher/.watcher.env | cut -d'=' -f2 | xargs)"
+CLIENT_SUMMARY="$(docker ps --format '{{.Names}}: {{.Image}}' | grep -E 'consensus|validator|execution' || echo 'N/A')"
+TAIL_LOG="$(tail -20 "$ALERT_LOG" 2>/dev/null || echo 'No log available')"
 
 # --- Flags ---
 [[ "$1" == "--debug" ]] && DEBUG=true
@@ -98,12 +103,15 @@ send_alert() {
     *)       emoji="🔔";;
   esac
 
-  local telegram_msg="${emoji} <b>${header}</b>\n<b>Time:</b> ${NOW_TS}\n${body}"
-  local email_body="${emoji} ${header}\nTime: ${NOW_TS}\n\n${body}"
+  # Compose rich alert body
+  local rich_body="<b>Graffiti:</b> ${GRAFFITI}\n<b>Version:</b> v${SCRIPT_VERSION}\n<b>Clients:</b>\n<pre>${CLIENT_SUMMARY}</pre>\n<b>Log Tail:</b>\n<pre>${TAIL_LOG}</pre>"
+  local full_body="${body}\n\n${rich_body}"
+  local telegram_msg="${emoji} <b>${header}</b>\n<b>Time:</b> ${NOW_TS}\n${full_body}"
+  local email_body="${emoji} ${header}\nTime: ${NOW_TS}\n\n${full_body}"
 
   send_telegram "$telegram_msg"
   send_email "$emoji" "$header" "$email_body"
-  echo -e "${NOW_TS} ${emoji} ${header}\n${body}" >> "$ALERT_LOG"
+  echo -e "${NOW_TS} ${emoji} ${header}\n${full_body}" >> "$ALERT_LOG"
   report_status "📣 Sent alert — Telegram + Email + log"
 }
 
