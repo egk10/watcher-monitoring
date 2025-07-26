@@ -7,24 +7,55 @@ Monitor missed attestations, send Telegram alerts, update your node, and manage 
 ---
 
 
-## 🚀 Install Instructions
+## 🚀 Installation Instructions
 
-> **Quick Start:**
->
-> 1. **Clone the repository:**
->    ```bash
->    git clone https://github.com/egk10/watcher-monitoring.git
->    cd watcher-monitoring
->    ```
-> 2. **Run the installer:**
->    ```bash
->    ./install.sh
->    ```
->    The installer is interactive and will prompt you for all required secrets if `.watcher.env` is missing. Optionally, you may pre-create a `.watcher.env` file in the repo root (see below for required variables) to skip the prompts.
-> 3. **That's it!**
->    - All scripts and systemd timers (including auto-updates) are deployed automatically.
->    - No manual update steps are needed—your node will always stay up to date.
->    - **If any value contains spaces, wrap it in single quotes (e.g. 'my app password').**
+### **Method 1: Quick Install via .deb Package (Recommended)**
+
+```bash
+# Download the latest release
+wget https://github.com/egk10/watcher-monitoring/releases/download/v3.5/watcher-monitoring-v3.5.deb
+
+# Install the package
+sudo dpkg -i watcher-monitoring-v3.5.deb
+
+# Run the interactive installer
+sudo /usr/local/bin/install.sh
+```
+
+### **Method 2: Alternative Package Installation**
+
+```bash
+# Download and install in one step
+wget https://github.com/egk10/watcher-monitoring/releases/download/v3.5/watcher-monitoring-v3.5.deb
+sudo apt install ./watcher-monitoring-v3.5.deb
+
+# Run the interactive installer
+sudo /usr/local/bin/install.sh
+```
+
+### **Method 3: Manual Installation from Source**
+
+```bash
+# Clone the repository
+git clone https://github.com/egk10/watcher-monitoring.git
+cd watcher-monitoring
+
+# Run the installer
+./install.sh
+```
+
+### **📊 Installation Methods Comparison**
+
+| Method | Best For | Advantages | Requirements |
+|--------|----------|------------|--------------|
+| **📦 .deb Package** | Production nodes | • Proper package management<br>• Clean uninstall via apt<br>• System integration | • Root access<br>• Ubuntu/Debian |
+| **📂 Source Install** | Development/Testing | • Easy modifications<br>• Latest code<br>• Git integration | • Git installed<br>• Manual updates |
+
+> **📋 Notes:**
+> - The installer is interactive and will prompt you for all required secrets if `.watcher.env` is missing
+> - All scripts and systemd timers (including auto-updates) are deployed automatically
+> - No manual update steps are needed—your node will always stay up to date
+> - **If any value contains spaces, wrap it in single quotes (e.g. 'my app password')**
 
 ---
 
@@ -80,26 +111,40 @@ systemctl list-timers --all | grep watcher
 
 ## 🗑️ Uninstall Instructions
 
-### **Complete Removal from All Nodes**
+### **Method 1: Complete Removal via Package (Recommended)**
 
-To completely remove watcher-monitoring from all your nodes (including all files, folders, services, and configurations):
+If you installed via .deb package:
 
-1. **Complete cleanup (recommended):**
-   ```bash
-   ./complete_cleanup.sh
-   ```
+```bash
+# Complete cleanup from all nodes
+/usr/local/bin/complete_cleanup.sh
 
-2. **Verify removal:**
-   ```bash
-   ./verify_complete_cleanup.sh
-   ```
+# Verify removal
+/usr/local/bin/verify_complete_cleanup.sh
 
-3. **Remove local repository:**
-   ```bash
-   cd .. && rm -rf watcher-monitoring/
-   ```
+# Remove the package (cleans up /usr/local/bin/ scripts)
+sudo apt remove watcher-monitoring
 
-### **Manual Single-Node Removal**
+# Optional: Remove configuration directory
+sudo rm -rf /etc/watcher/
+```
+
+### **Method 2: Complete Removal from All Nodes (Source Install)**
+
+If you installed from source and want to remove from multiple nodes:
+
+```bash
+# Run complete cleanup (removes from all configured nodes)
+./complete_cleanup.sh
+
+# Verify removal across all nodes
+./verify_complete_cleanup.sh
+
+# Remove local repository
+cd .. && rm -rf watcher-monitoring/
+```
+
+### **Method 3: Manual Single-Node Removal**
 
 If you need to remove from a specific node manually:
 
