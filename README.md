@@ -55,6 +55,8 @@ EMAIL_TO=your-email@gmail.com
 | `watcher-status.sh`                              | Prints validator activity summary       |
 | `watcher-health.sh --force --debug`              | Sends test alert to Telegram            |
 | `systemctl list-timers --all | grep watcher`     | Shows all watcher-related timers        |
+| `./complete_cleanup.sh`                          | Complete uninstall from all nodes      |
+| `./verify_complete_cleanup.sh`                   | Verify complete removal                 |
 
 **Quick System Overview:**
 ```
@@ -74,6 +76,55 @@ To check the status and next run of all watcher-related systemd timers at any ti
 systemctl list-timers --all | grep watcher
 ```
 
+---
+
+## 🗑️ Uninstall Instructions
+
+### **Complete Removal from All Nodes**
+
+To completely remove watcher-monitoring from all your nodes (including all files, folders, services, and configurations):
+
+1. **Complete cleanup (recommended):**
+   ```bash
+   ./complete_cleanup.sh
+   ```
+
+2. **Verify removal:**
+   ```bash
+   ./verify_complete_cleanup.sh
+   ```
+
+3. **Remove local repository:**
+   ```bash
+   cd .. && rm -rf watcher-monitoring/
+   ```
+
+### **Manual Single-Node Removal**
+
+If you need to remove from a specific node manually:
+
+```bash
+# SSH to the target node
+ssh user@your-node.example.com
+
+# Download and run uninstall script
+curl -sL https://raw.githubusercontent.com/egk10/watcher-monitoring/main/uninstall.sh | sudo bash
+
+# Or run from local repository
+cd watcher-monitoring
+sudo ./uninstall.sh
+```
+
+### **What Gets Removed**
+- ✅ All systemd timers and services (`watcher-health`, `update-node`, `update-watcher`)
+- ✅ All scripts from `/usr/local/bin/` (`watcher-*`, `update_*.sh`)
+- ✅ All configuration files (`/etc/watcher/`, `~/.watcher.env`)
+- ✅ All log directories (`/var/log/*-watcher/`)
+- ✅ Git repository (`~/watcher-monitoring/`)
+- ✅ All temporary files (`/tmp/watcher-*`, `/tmp/uninstall.sh`)
+
+---
+
 
 ## 🛠 Requirements
 
@@ -84,6 +135,17 @@ systemctl list-timers --all | grep watcher
 
 
 ## 🧾 Changelog
+
+v3.5 — July 26, 2025
+
+- **MAJOR:** Added complete uninstall/cleanup functionality
+- New scripts: `complete_cleanup.sh`, `verify_complete_cleanup.sh`, `uninstall.sh`
+- Multi-node cleanup via SSH automation with fallback to manual instructions
+- Complete removal of all components: systemd services, scripts, configs, logs, and repositories
+- Comprehensive verification system to ensure clean removal
+- Updated documentation with detailed uninstall instructions
+- Fixed emoji encoding issues in bash scripts
+- Enhanced error handling and user feedback
 
 v3.4 — July 4, 2025
 
