@@ -1,6 +1,6 @@
 #!/bin/bash
 # uninstall.sh — Complete removal of watcher-monitoring v3.3
-# 🗑️ Removes all traces of the watcher monitoring system
+#  Removes all traces of the watcher monitoring system
 
 set -e
 
@@ -11,18 +11,18 @@ SYSTEMD_PATH="/etc/systemd/system"
 HOSTNAME=$(hostname)
 LOG_DIR="/var/log/${HOSTNAME}-watcher"
 
-echo "🗑️ Starting complete uninstall of watcher-monitoring v$VERSION..."
-echo "⚠️  This will remove all watcher scripts, timers, services, and logs."
+echo "Starting complete uninstall of watcher-monitoring v$VERSION..."
+echo "This will remove all watcher scripts, timers, services, and logs."
 read -p "Are you sure you want to continue? (y/N): " -n 1 -r
 echo
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-    echo "❌ Uninstall cancelled."
+    echo "Uninstall cancelled."
     exit 1
 fi
 
-### 🛑 Stop and disable all systemd timers and services
+###  Stop and disable all systemd timers and services
 stop_systemd_services() {
-    echo "🛑 Stopping and disabling systemd timers and services..."
+    echo "Stopping and disabling systemd timers and services..."
     
     # List of all watcher-related services and timers
     SERVICES=(
@@ -51,16 +51,16 @@ stop_systemd_services() {
         
         # Remove systemd unit files
         if [[ -f "$SYSTEMD_PATH/$service" ]]; then
-            echo "  🗑️ Removing $SYSTEMD_PATH/$service"
+            echo "  Removing $SYSTEMD_PATH/$service"
             sudo rm -f "$SYSTEMD_PATH/$service"
         fi
     done
     
     # Also check for any remaining watcher processes and kill them
-    echo "  🔍 Checking for remaining watcher processes..."
+    echo "   Checking for remaining watcher processes..."
     WATCHER_PIDS=$(pgrep -f "watcher-health\|update_node\|update-watcher" 2>/dev/null || true)
     if [[ -n "$WATCHER_PIDS" ]]; then
-        echo "  🛑 Killing remaining watcher processes: $WATCHER_PIDS"
+        echo "   Killing remaining watcher processes: $WATCHER_PIDS"
         sudo kill -9 $WATCHER_PIDS 2>/dev/null || true
     fi
     
@@ -73,12 +73,12 @@ stop_systemd_services() {
         sudo systemctl unmask "$service" 2>/dev/null || true
     done
     
-    echo "✅ All systemd services stopped and disabled"
+    echo " All systemd services stopped and disabled"
 }
 
-### 🗑️ Remove installed scripts
+###  Remove installed scripts
 remove_scripts() {
-    echo "🗑️ Removing installed scripts..."
+    echo " Removing installed scripts..."
     
     SCRIPTS=(
         "watcher-status.sh"
@@ -88,84 +88,84 @@ remove_scripts() {
     
     for script in "${SCRIPTS[@]}"; do
         if [[ -f "$SCRIPT_PATH/$script" ]]; then
-            echo "  🗑️ Removing $SCRIPT_PATH/$script"
+            echo "   Removing $SCRIPT_PATH/$script"
             sudo rm -f "$SCRIPT_PATH/$script"
         fi
     done
-    echo "✅ Scripts removed from $SCRIPT_PATH/"
+    echo " Scripts removed from $SCRIPT_PATH/"
 }
 
-### 🗑️ Remove environment file and directory
+###  Remove environment file and directory
 remove_env_file() {
-    echo "🗑️ Removing environment configuration..."
+    echo " Removing environment configuration..."
     
     if [[ -f "$ENV_FILE_DEST" ]]; then
-        echo "  🗑️ Removing $ENV_FILE_DEST"
+        echo "   Removing $ENV_FILE_DEST"
         sudo rm -f "$ENV_FILE_DEST"
     fi
     
     if [[ -d "$(dirname "$ENV_FILE_DEST")" ]]; then
         # Only remove if directory is empty
         if [[ -z "$(ls -A "$(dirname "$ENV_FILE_DEST")" 2>/dev/null)" ]]; then
-            echo "  🗑️ Removing empty directory $(dirname "$ENV_FILE_DEST")"
+            echo "   Removing empty directory $(dirname "$ENV_FILE_DEST")"
             sudo rmdir "$(dirname "$ENV_FILE_DEST")"
         fi
     fi
-    echo "✅ Environment configuration removed"
+    echo " Environment configuration removed"
 }
 
-### 🗑️ Remove log files and directory
+###  Remove log files and directory
 remove_logs() {
-    echo "🗑️ Removing log files..."
+    echo " Removing log files..."
     
     if [[ -d "$LOG_DIR" ]]; then
-        echo "  🗑️ Removing log directory $LOG_DIR"
+        echo "   Removing log directory $LOG_DIR"
         sudo rm -rf "$LOG_DIR"
     fi
     
     # Also remove any debug logs in /tmp
     if [[ -f "/tmp/update_node_debug.log" ]]; then
-        echo "  🗑️ Removing debug log /tmp/update_node_debug.log"
+        echo "   Removing debug log /tmp/update_node_debug.log"
         sudo rm -f "/tmp/update_node_debug.log"
     fi
-    echo "✅ Log files removed"
+    echo " Log files removed"
 }
 
-### 🗑️ Remove mail configuration (optional)
+###  Remove mail configuration (optional)
 remove_mail_config() {
-    echo "🗑️ Checking mail configuration..."
+    echo " Checking mail configuration..."
     
     if [[ -f "$HOME/.msmtprc" ]]; then
         read -p "Remove msmtp configuration (~/.msmtprc)? (y/N): " -n 1 -r
         echo
         if [[ $REPLY =~ ^[Yy]$ ]]; then
-            echo "  🗑️ Removing $HOME/.msmtprc"
+            echo "   Removing $HOME/.msmtprc"
             rm -f "$HOME/.msmtprc"
             
             if [[ -f "$HOME/.msmtp.log" ]]; then
-                echo "  🗑️ Removing $HOME/.msmtp.log"
+                echo "   Removing $HOME/.msmtp.log"
                 rm -f "$HOME/.msmtp.log"
             fi
         fi
     fi
-    echo "✅ Mail configuration checked"
+    echo " Mail configuration checked"
 }
 
-### 🔍 Verify complete removal
+###  Verify complete removal
 verify_removal() {
-    echo "🔍 Verifying complete removal..."
+    echo " Verifying complete removal..."
     
     # Check for any remaining systemd units
     REMAINING_UNITS=$(systemctl list-units --all | grep -E 'watcher-health|update-node|update-watcher' || true)
     if [[ -n "$REMAINING_UNITS" ]]; then
-        echo "⚠️  WARNING: Some systemd units may still exist:"
+        echo "  WARNING: Some systemd units may still exist:"
         echo "$REMAINING_UNITS"
     fi
     
     # Check for any remaining timers
     REMAINING_TIMERS=$(systemctl list-timers --all | grep -E 'watcher-health|update-node|update-watcher' || true)
     if [[ -n "$REMAINING_TIMERS" ]]; then
-        echo "⚠️  WARNING: Some timers may still be scheduled:"
+        echo "  WARNING: Some timers may still be scheduled:"
         echo "$REMAINING_TIMERS"
     fi
     
@@ -178,11 +178,11 @@ verify_removal() {
     done
     
     if [[ -n "$REMAINING_FILES" ]]; then
-        echo "⚠️  WARNING: Some files may still exist:$REMAINING_FILES"
+        echo "  WARNING: Some files may still exist:$REMAINING_FILES"
     fi
     
     if [[ -z "$REMAINING_UNITS" && -z "$REMAINING_TIMERS" && -z "$REMAINING_FILES" ]]; then
-        echo "✅ Complete removal verified - no traces found"
+        echo " Complete removal verified - no traces found"
     fi
 }
 
@@ -190,10 +190,10 @@ verify_removal() {
 success_banner() {
     echo ""
     echo "🎉 Uninstall complete - watcher-monitoring v$VERSION removed"
-    echo "✅ Systemd timers and services removed"
-    echo "✅ Scripts removed from $SCRIPT_PATH/"
-    echo "✅ Environment configuration removed"
-    echo "✅ Log files removed"
+    echo " Systemd timers and services removed"
+    echo " Scripts removed from $SCRIPT_PATH/"
+    echo " Environment configuration removed"
+    echo " Log files removed"
     echo ""
     echo "📝 What was removed:"
     echo "  • watcher-health.timer/service (health checks)"
@@ -206,7 +206,7 @@ success_banner() {
     echo "🔔 No more automated notifications will be sent"
     echo "📧 Mail configuration (msmtp) left intact unless manually removed"
     echo ""
-    echo "🗑️ You can safely delete this repository directory if no longer needed."
+    echo " You can safely delete this repository directory if no longer needed."
 }
 
 ### 🚀 Run all removal steps
@@ -220,6 +220,6 @@ verify_removal
 success_banner
 
 echo ""
-echo "✅ Uninstall completed successfully on $(hostname)"
+echo " Uninstall completed successfully on $(hostname)"
 echo "🔄 Run this script on all 6 nodes to complete removal from your cluster"
 exit 0
