@@ -3,7 +3,7 @@
 
 set -e
 
-VERSION="3.5"
+VERSION="3.5.1"
 PACKAGE_NAME="watcher-monitoring"
 PACKAGE_FILE="${PACKAGE_NAME}-v${VERSION}.deb"
 TAG_NAME="v${VERSION}"
