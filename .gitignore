@@ -1,3 +1,7 @@
 .watcher.env
 my_run.log
 context.txt
+
+# Build artifacts
+deb_build/
+*.deb
